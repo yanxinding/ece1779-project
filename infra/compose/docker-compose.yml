@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: cloud_db
+      POSTGRES_USER: postgres
+      # TODO: replace later
+      POSTGRES_PASSWORD: change_me_strong_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ../../db/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ../../db/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cloud_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: ../../
+      dockerfile: services/api/Dockerfile
+    environment:
+      #TODO: change later
+      DATABASE_URL: postgres://postgres:change_me_strong_password@postgres:5432/cloud_db
+      PORT: "8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: ../../
+      dockerfile: services/worker/Dockerfile
+    environment:
+      DATABASE_URL: postgres://postgres:change_me_strong_password@postgres:5432/cloud_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:

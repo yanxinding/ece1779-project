@@ -1,0 +1,44 @@
+# =====================
+# OS / Editor junk
+# =====================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =====================
+# Environment variables
+# =====================
+.env
+.env.*
+
+# =====================
+# Docker
+# =====================
+**/node_modules
+**/__pycache__
+**/*.pyc
+
+# =====================
+# Logs
+# =====================
+*.log
+
+# =====================
+# Database volumes (IMPORTANT)
+# =====================
+pgdata/
+postgres-data/
+data/
+
+# =====================
+# Build artifacts
+# =====================
+dist/
+build/
+
+# =====================
+# Kubernetes secrets
+# =====================
+*.key
+*.pem
