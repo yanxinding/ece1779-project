@@ -1,4 +1,8 @@
-FROM alpine:3.20
+FROM node:20-alpine
 WORKDIR /app
+COPY package.json ./
+RUN npm install --omit=dev
+COPY src ./src
 EXPOSE 8080
-CMD ["sh", "-c", "echo 'api placeholder started'; sleep infinity"]
+ENV PORT=8080
+CMD ["npm", "start"]
