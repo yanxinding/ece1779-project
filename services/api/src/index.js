@@ -227,7 +227,7 @@ app.post("/orders", async (req, res) => {
     await client.query("COMMIT");
 
     logJSON({ level: "info", msg: "order_created", order_id, user_id, item_count: items.length });
-    return res.status(201).json({ order_id, status: "created" });
+    return res.status(201).json({ order_id, status: "PENDING" });
   } catch (e) {
     try {
       await client.query("ROLLBACK");
