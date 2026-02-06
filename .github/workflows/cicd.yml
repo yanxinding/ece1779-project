@@ -37,7 +37,7 @@ jobs:
       - name: Build and push api
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: services/api
           file: services/api/Dockerfile
           push: true
           tags: ${{ steps.vars.outputs.API_IMAGE }}
@@ -45,7 +45,7 @@ jobs:
       - name: Build and push worker
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: services/worker
           file: services/worker/Dockerfile
           push: true
           tags: ${{ steps.vars.outputs.WORKER_IMAGE }}
