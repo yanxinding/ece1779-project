@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-backup
+spec:
+  schedule: "0 3 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: pg-backup
+              image: postgres:16
+              envFrom:
+                - secretRef:
+                    name: pg-backup-secret
+                - secretRef:
+                    name: spaces-secret
+              command: ["/bin/bash", "-lc"]
+              args:
+                - |
+                  set -euo pipefail
+                  TS=$(date -u +%Y%m%dT%H%M%SZ)
+                  FILE="pgdump_${PGDATABASE}_${TS}.dump"
+                  export PGPASSWORD="${PGPASSWORD}"
+                  pg_dump -h "${PGHOST}" -p "${PGPORT}" -U "${PGUSER}" -d "${PGDATABASE}" -Fc -f "/tmp/${FILE}"
+                  apt-get update >/dev/null
+                  apt-get install -y awscli ca-certificates >/dev/null
+                  aws --endpoint-url "${S3_ENDPOINT}" s3 cp "/tmp/${FILE}" "s3://${S3_BUCKET}/${FILE}"

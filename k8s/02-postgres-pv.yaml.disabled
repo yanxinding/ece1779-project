@@ -1,0 +1,15 @@
+# this file was initially for setting up local kubernetes (minikube), everything not needed after deploying on DigitalOcean Kubernetes
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: manual
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/data/ece1779-postgres
+    type: DirectoryOrCreate

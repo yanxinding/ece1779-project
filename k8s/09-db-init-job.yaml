@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-init
+  namespace: ece1779
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: db-init
+        image: postgres:16
+        env:
+        - name: PGHOST
+          value: postgres
+        - name: PGPORT
+          value: "5432"
+        - name: PGUSER
+          value: postgres
+        - name: PGDATABASE
+          value: cloud_db
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: pg-secret
+              key: POSTGRES_PASSWORD
+        command:
+        - sh
+        - -c
+        - |
+          set -e
+          echo "Waiting for Postgres..."
+          until pg_isready -h "$PGHOST" -p "$PGPORT" -U "$PGUSER"; do
+            sleep 2
+          done
+
+          echo "Running schema.sql"
+          psql -v ON_ERROR_STOP=1 -f /sql/schema.sql
+
+          echo "Running seed.sql"
+          psql -v ON_ERROR_STOP=1 -f /sql/seed.sql
+
+          echo "DB initialization completed"
+        volumeMounts:
+        - name: sql
+          mountPath: /sql
+      volumes:
+      - name: sql
+        configMap:
+          name: db-init-sql
