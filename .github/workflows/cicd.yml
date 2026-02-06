@@ -20,9 +20,9 @@ jobs:
         id: vars
         run: |
           echo "TAG=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
-          echo "API_IMAGE=${{ env.REGISTRY }}/${{ secrets.DOCR_NAME }}/api:${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
-          echo "WORKER_IMAGE=${{ env.REGISTRY }}/${{ secrets.DOCR_NAME }}/worker:${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
-
+          echo "API_IMAGE=${{ env.REGISTRY }}/${{ secrets.DOCR_NAME }}/ece1779:${GITHUB_SHA::7}-api" >> $GITHUB_OUTPUT
+          echo "WORKER_IMAGE=${{ env.REGISTRY }}/${{ secrets.DOCR_NAME }}/ece1779:${GITHUB_SHA::7}-worker" >> $GITHUB_OUTPUT
+          
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
