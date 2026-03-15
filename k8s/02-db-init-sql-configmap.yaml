@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-init-sql
+  namespace: ece1779
+data:
+  schema.sql: |
+    -- paste full db/schema.sql
+  seed.sql: |
+    -- paste full db/seed.sql

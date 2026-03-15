@@ -6,8 +6,8 @@ A **stateful cloud-native backend service** that processes orders while maintain
 
 ## Team Information
 - **Name**: Yanxin Ding  
-- **Student Number**: (fill)  
-- **Email**: (fill)  
+- **Student Number**: (1003790579)  
+- **Email**: (yanxin.ding@mail.utoronto.ca)  
 
 ---
 
@@ -169,6 +169,8 @@ Under concurrent requests, at most the available inventory can be sold; excess r
 ## Local Development (Docker Compose)
 
 ### Start
+Make sure you have started Docker.
+Then,
 ```bash
 docker compose -f infra/compose/docker-compose.yml up -d --build
 ```

@@ -103,24 +103,24 @@ This project is completed by a single author.
 
 ## 4. Initial Independent Reasoning (Before Using AI)
 ### Architecture Choices
-While **DigitalOcean** is the mandatory choice for this project, we decided to use **Kubernetes on DigitalOcean** for richer features set, better ecosystem support, and closer alignment with industrial practices. PostgreSQL was selected for its transactional guarantees. 
+While **DigitalOcean** is the mandatory choice for this project, I decided to use **Kubernetes on DigitalOcean** for richer features set, better ecosystem support, and closer alignment with industrial practices. PostgreSQL was selected for its transactional guarantees. 
 
 ### Anticipated Challenges
 The primary challenge is expected to be **debugging issues after the initial setup**. Unlike conventional coding projects, this project involves multiple layers of components communicating with each other. Failures may arise from configuration or environment mismatches rather than application logic. Based on prior experience on course assignments, identifying root causes in such a distributed setup can be non-trivial and requires extensive testign and research.
 
 
 ### Early Development Approach
-The initial plan was to first build a correct local system using Docker Compose, then incrementally migrate it to Kubernetes. We also utilize course asssignment instructions to facilitate setups.
+The initial plan was to first build a correct local system using Docker Compose, then incrementally migrate it to Kubernetes. I also utilize course asssignment instructions to facilitate setups.
 
 ---
 
 ## 5. AI Assistance Disclosure
 
 ### Use of AI
-- after initial draft of proposal, AI tools are used to rephrase, as well as double checking our planning fulfills all requirement of the project.
+- after initial draft of proposal, AI tools are used to rephrase, as well as double checking my planning fulfills all requirement of the project.
 
 1. The initial planning, thinking, drafting were developed **without** AI assistance.
-2. Rephrasing, grammer/typo check, project requirement double checking were done **with** AI assistance. We also asked AI to check if our tentitive planning is feasable. 
-3. AI suggested us to add one more advanced feature, for example security enhancement using HTTPS; however, consider the team size and timeline we decided to ignore this suggestion.
+2. Rephrasing, grammer/typo check, project requirement double checking were done **with** AI assistance. I also asked AI to check if my tentitive planning is feasable. 
+3. AI suggested me to add one more advanced feature, for example security enhancement using HTTPS; however, consider the team size and timeline I decided to ignore this suggestion.
 ---
 
