@@ -57,6 +57,7 @@ This project focuses on the backend core problem of **order processing and inven
 ├── services/
 │   ├── api/
 │   │   ├── src/index.js
+│   │   ├── src/db.js
 │   │   ├── package.json
 │   │   └── Dockerfile
 │   └── worker/
@@ -71,14 +72,14 @@ This project focuses on the backend core problem of **order processing and inven
 │       └── docker-compose.yml
 ├── k8s/
 │   ├── 00-namespace.yaml
-│   ├── 01-api-deployment.yaml
-│   ├── 02-worker-deployment.yaml
+│   ├── 01-config.yaml
+│   ├── 02-db-init-sql-configmap.yaml
 │   ├── 03-postgres-pvc.yaml
 │   ├── 04-postgres-statefulset.yaml
-│   ├── 05-postgres-svc.yaml
-│   ├── 06-api-svc.yaml
-│   ├── 07-ingress.yaml
-│   ├── 08-api-config.yaml
+│   ├── 05-api-deployment.yaml
+│   ├── 06-api-service.yaml
+│   ├── 07-worker-deployment.yaml
+│   ├── 08-ingress.yaml
 │   ├── 09-db-init-job.yaml
 │   └── 10-pg-backup.yaml
 └── .github/workflows/
