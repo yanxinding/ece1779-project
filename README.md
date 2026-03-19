@@ -18,8 +18,8 @@ A **stateful cloud-native backend system** for order processing that preserves i
 
 ## Deployment Information
 
-- **Example products endpoint**: http://209.38.0.228/products
-- **Example health check**: http://209.38.0.228/healthz
+- **Example products endpoint**: curl http://209.38.0.228/products
+- **Example health check**: curl -i http://209.38.0.228/healthz
 - **Deployment Provider**: DigitalOcean Kubernetes
 - **Note**: This project exposes a backend API only; no separate frontend UI is implemented.
 
