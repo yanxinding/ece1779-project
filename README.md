@@ -12,7 +12,7 @@ A **stateful cloud-native backend system** for order processing that preserves i
 ---
 
 ## Video Demo
-- **URL**: (fill — YouTube / Google Drive / Dropbox)
+- **URL**: https://youtu.be/fULKxoaDVyU 
 
 ---
 
