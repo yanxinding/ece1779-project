@@ -37,7 +37,7 @@ Explained that PowerShell aliases `curl` to `Invoke-WebRequest`, which does not 
     to:
     ```powershell
     Invoke-RestMethod -Method POST `
-      -Uri "http://localhost:3000/tasks" `
+      -Uri "http://localhost:8080/tasks" `
       -Headers @{ Authorization = "Bearer ece1779a4apikey" } `
       -Body '{"title":"Task 1","description":"Do something","status":"pending"}' `
       -ContentType "application/json"
