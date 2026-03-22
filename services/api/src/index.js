@@ -1,10 +1,3 @@
-// services/api/src/index.js
-// Node + Express + pg
-// Matches your schema:
-//   products(id, sku, name, inventory, created_at)
-//   order_items(id, order_id, product_id, quantity)
-// Assumes orders table has: orders(id, user_id, status, created_at)
-
 const express = require("express");
 const { Pool } = require("pg");
 
@@ -13,7 +6,6 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 8080;
 
-// IMPORTANT: inside Docker network, host must be the service name "postgres"
 const DATABASE_URL =
   process.env.DATABASE_URL ||
   "postgres://postgres:postgres@postgres:5432/cloud_db?sslmode=disable";
@@ -24,7 +16,7 @@ function logJSON(obj) {
   console.log(JSON.stringify({ ts: new Date().toISOString(), ...obj }));
 }
 
-// ---------- Health ----------
+// Health
 app.get("/healthz", async (req, res) => {
   try {
     await pool.query("SELECT 1");
@@ -35,7 +27,7 @@ app.get("/healthz", async (req, res) => {
   }
 });
 
-// ---------- GET /products ----------
+// GET /products
 app.get("/products", async (req, res) => {
   try {
     const { rows } = await pool.query(
@@ -50,7 +42,7 @@ app.get("/products", async (req, res) => {
   }
 });
 
-// ---------- GET /orders/:id ----------
+// GET /orders/:id
 app.get("/orders/:id", async (req, res) => {
   const orderId = Number(req.params.id);
   if (!Number.isInteger(orderId) || orderId <= 0) {
@@ -89,19 +81,12 @@ app.get("/orders/:id", async (req, res) => {
   }
 });
 
-// ---------- POST /orders ----------
+// POST /orders 
 // Body example:
 // {
 //   "user_id": 1,
 //   "items": [ {"product_id": 1, "quantity": 2}, {"product_id": 2, "quantity": 1} ]
 // }
-//
-// Correctness:
-// - single transaction
-// - lock product rows with SELECT ... FOR UPDATE
-// - validate inventory
-// - decrement inventory with guard (inventory >= qty)
-// - insert order + order_items
 app.post("/orders", async (req, res) => {
   const body = req.body || {};
   const user_id = Number(body.user_id);
@@ -119,14 +104,13 @@ app.post("/orders", async (req, res) => {
     }
   }
 
-  // Deterministic locking order to avoid deadlocks
   const productIds = [...new Set(items.map((i) => Number(i.product_id)))].sort((a, b) => a - b);
 
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
 
-    // 1) lock all involved products rows
+
     const locked = await client.query(
       `SELECT id, inventory
        FROM products
@@ -136,7 +120,6 @@ app.post("/orders", async (req, res) => {
       [productIds]
     );
 
-    // 2) build inventory map + verify products exist
     const invMap = new Map();
     for (const r of locked.rows) {
       invMap.set(r.id, r.inventory);
@@ -149,7 +132,7 @@ app.post("/orders", async (req, res) => {
       }
     }
 
-    // 3) validate inventory
+
     for (const it of items) {
       const pid = Number(it.product_id);
       const qty = Number(it.quantity);
@@ -171,8 +154,6 @@ app.post("/orders", async (req, res) => {
       invMap.set(pid, cur - qty);
     }
 
-    // 4) create order
-    // Assumes orders has (user_id, status) and returns id.
     const orderIns = await client.query(
       `INSERT INTO orders(user_id, status)
        VALUES ($1, 'PENDING')
@@ -181,12 +162,10 @@ app.post("/orders", async (req, res) => {
     );
     const order_id = orderIns.rows[0].id;
 
-    // 5) decrement inventory + insert items
     for (const it of items) {
       const pid = Number(it.product_id);
       const qty = Number(it.quantity);
 
-      // decrement with guard to prevent negative inventory
       const upd = await client.query(
         `UPDATE products
          SET inventory = inventory - $1
@@ -213,7 +192,6 @@ app.post("/orders", async (req, res) => {
         [order_id, pid, qty]
       );
 
-      // structured log per item (good for proof)
       logJSON({
         level: "info",
         msg: "order_item_created",
@@ -239,7 +217,7 @@ app.post("/orders", async (req, res) => {
   }
 });
 
-// ---------- start ----------
+// start
 app.listen(PORT, () => {
   logJSON({ level: "info", msg: "api_listening", port: String(PORT) });
 });
